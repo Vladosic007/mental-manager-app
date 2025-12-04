@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mental Manager | Психологический помощник</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="logo">
+                <div class="logo-icon">🧠</div>
+                <h1>Mental Manager</h1>
+            </div>
+            <div class="profile-btn" id="profileBtn">
+                <span>👤 Профиль</span>
+            </div>
+        </header>
+
+        <div class="chat-container" id="chatContainer">
+            <div class="message bot-message">
+                <div class="avatar">🤖</div>
+                <div class="content">
+                    Привет! Я Mental Manager. Давай создадим твой психологический профиль для более персонализированной помощи.
+                </div>
+            </div>
+        </div>
+
+        <div class="profile-card" id="profileCard">
+            <h3>📊 Создать психологический профиль</h3>
+            <p>Ответь на несколько вопросов для персонализации помощи</p>
+            <button class="btn-primary" id="createProfileBtn">Начать оценку</button>
+        </div>
+
+        <div class="input-container">
+            <textarea 
+                id="messageInput" 
+                placeholder="Напишите о своей проблеме или чувствах..." 
+                rows="1"
+            ></textarea>
+            <button id="sendBtn">➤</button>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Создание психологического профиля</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .profile-form {
+            padding: 20px;
+            overflow-y: auto;
+            height: calc(100vh - 60px);
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        select, input, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            font-size: 16px;
+        }
+        
+        .scale {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+        }
+        
+        .scale-item {
+            text-align: center;
+            flex: 1;
+        }
+        
+        .scale-number {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 5px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .scale-number.selected {
+            background: #007bff;
+            color: white;
+        }
+        
+        .chip-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .chip {
+            background: #f0f0f0;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .chip.selected {
+            background: #007bff;
+            color: white;
+        }
+        
+        .progress-bar {
+            height: 4px;
+            background: #e0e0e0;
+            margin: 20px 0;
+            border-radius: 2px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: #007bff;
+            width: 0%;
+            transition: width 0.3s;
+        }
+        
+        .btn-container {
+            display: flex;
+            gap: 10px;
+            margin-top: 30px;
+        }
+        
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #333;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-weight: 600;
+            cursor: pointer;
+            flex: 1;
+        }
+        
+        .btn-success {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-weight: 600;
+            cursor: pointer;
+            flex: 2;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="logo">
+                <div class="logo-icon">📊</div>
+                <h1>Психологический профиль</h1>
+            </div>
+        </header>
+
+        <div class="profile-form" id="profileForm">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+
+            <div class="form-step" id="step1">
+                <h3>👤 Основная информация</h3>
+                
+                <div class="form-group">
+                    <label>Возраст</label>
+                    <select id="age">
+                        <option value="">Выберите возраст</option>
+                        <option value="до 18">До 18 лет</option>
+                        <option value="18-25">18-25 лет</option>
+                        <option value="26-35">26-35 лет</option>
+                        <option value="36-50">36-50 лет</option>
+                        <option value="50+">50+ лет</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Род деятельности</label>
+                    <select id="occupation">
+                        <option value="">Выберите вариант</option>
+                        <option value="школьник">Школьник</option>
+                        <option value="студент">Студент</option>
+                        <option value="работаю">Работаю</option>
+                        <option value="фрилансер">Фрилансер</option>
+                        <option value="в поиске">В поиске работы</option>
+                        <option value="другое">Другое</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-step" id="step2" style="display: none;">
+                <h3>🎭 Эмоциональное состояние</h3>
+                
+                <div class="form-group">
+                    <label>Уровень тревоги (1-10)</label>
+                    <div class="scale" id="anxietyScale">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Настроение в целом (1-10)</label>
+                    <div class="scale" id="moodScale">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Уровень стресса (1-10)</label>
+                    <div class="scale" id="stressScale">
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-step" id="step3" style="display: none;">
+                <h3>🎯 Основные темы для работы</h3>
+                <p>Выберите 1-3 основные проблемы</p>
+                
+                <div class="chip-container" id="topicsChips">
+                </div>
+            </div>
+
+            <div class="form-step" id="step4" style="display: none;">
+                <h3>🌟 Черты характера</h3>
+                <p>Выберите свои сильные стороны</p>
+                
+                <div class="chip-container" id="strengthsChips">
+                </div>
+            </div>
+
+            <div class="btn-container">
+                <button class="btn-secondary" id="prevBtn" style="display: none;">Назад</button>
+                <button class="btn-success" id="nextBtn">Далее</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="profile.js"></script>
+</body>
+</html>
